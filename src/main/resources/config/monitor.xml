@@ -1,0 +1,22 @@
+<monitor>
+        <name>EventConsumptionMonitor</name>
+        <type>managed</type>
+        <description>Event Consumption Monitor</description>
+        <monitor-configuration></monitor-configuration>
+        <monitor-run-task>
+                <execution-style>periodic</execution-style>
+                <execution-frequency-in-seconds>60</execution-frequency-in-seconds>
+                <name>Event Consumption Monitor Run Task</name>
+                <display-name>Event Consumption Monitor Task</display-name>
+                <description>Event Consumption Monitor Task</description>
+                <type>java</type>
+                <execution-timeout-in-secs>60</execution-timeout-in-secs>
+                <task-arguments>
+                    <argument name="project_path" is-required="true" default-value="/home/satish/AppDynamics/MachineAgent/monitors/"/>
+		       </task-arguments>
+                <java-task>
+                    <classpath>event-consumption-extension.jar;lib/dom4j-1.6.1.jar;lib/xml-apis-1.0.b2.jar</classpath>
+                        <impl-class>com.appdynamics.monitors.events.EventConsumptionMonitor</impl-class>
+                </java-task>
+        </monitor-run-task>
+</monitor>

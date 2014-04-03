@@ -1,0 +1,23 @@
+<events>
+    <event>
+        <name>Tomcat Status</name>
+        <summary>Tomcat Status</summary>
+        <comment>Event for tomcat status</comment>
+        <path>/home/satish/AppDynamics/Code/extensions/event-consumption-extension/src/main/resources/config/scripts/script.sh</path>
+        <outputs>
+            <output>
+                <exitCode>0</exitCode>
+                <status>Down</status>
+            </output>
+            <output>
+                <exitCode>1</exitCode>
+                <status>Up</status>
+            </output>
+        </outputs>
+        <arguments/>
+        <!--Number of seconds to wait to execute the script periodically -->
+        <period>5</period>
+        <!-- Number of seconds to wait before force killing this script. If not specified, assumes 5 seconds-->
+        <max-wait-time>5</max-wait-time>
+    </event>
+</events>
