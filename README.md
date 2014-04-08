@@ -38,7 +38,7 @@ This extension works only with the standalone machine agent.
 </tr>
 <tr>
 <td class='confluenceTd'> pom.xml </td>
-<td class='confluenceTd'> Maven build script to package the project (required only if changing Java code) </td>
+<td class='confluenceTd'> Maven script file (required only if changing Java code) </td>
 </tr>
 </tbody>
 </table>
