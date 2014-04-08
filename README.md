@@ -128,10 +128,10 @@ else
 fi
 ~~~~
 
-Above script file will check whether tomcat is up or not. Exit code from the script will be checked in the events.xml to get the status.
+Above script file will check whether tomcat is up or not. Exit code from the script will be looked up in the events.xml to get the status.
 From the above script 
-if exit code is 0 then the status is Down
-if exit code is 1 then the status is Up
+* if exit code is 0 then the status is Down
+* if exit code is 1 then the status is Up
 
 
 ##Contributing
