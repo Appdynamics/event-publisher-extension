@@ -13,7 +13,7 @@ This extension works only with the standalone machine agent.
 4. Open the monitor.xml file and edit the project path to the EventConsumptionMonitor directory that was just created.
 5. Open the events.xml file and add the appropriate scripts such as those in [the events.xml example](https://github.com/Appdynamics/event-consumption-extension/blob/master/README.md#eventsxml).
 6. Restart the Machine Agent.
-7. In the AppDynamics controller, look for events in <App ID> -> Events
+7. In the AppDynamics controller, look for events in \<App ID\> -> Events
 
 **Note**: The event scripts must have read access by the Machine Agent for the monitoring extension to execute them.
 
