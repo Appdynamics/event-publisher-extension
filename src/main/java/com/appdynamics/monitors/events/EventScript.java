@@ -131,7 +131,7 @@ public class EventScript implements Runnable {
         Runtime runtime = Runtime.getRuntime();
         Process process = null;
         try {
-            process = runtime.exec(this.path);
+            process = runtime.exec(this.path + " " + this.arguments);
         } catch (IOException e) {
             LOG.error("Unable to run script: " + this.name, e);
         }
