@@ -34,7 +34,7 @@ This extension works only with the standalone machine agent.
 </tr>
 <tr>
 <td class='confluenceTd'> target </td>
-<td class='confluenceTd'> Only obtained when using maven. Run 'maven clean install' the distributable .zip file </td>
+<td class='confluenceTd'> Only obtained when using maven. Run 'maven clean install' to get the distributable .zip file </td>
 </tr>
 <tr>
 <td class='confluenceTd'> pom.xml </td>
