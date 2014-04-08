@@ -127,10 +127,6 @@ public class EventScript implements Runnable {
         return OUTPUT_NOT_DEFINED;
     }
 
-    public void setExitCode(int exitCode) {
-        this.exitCode = exitCode;
-    }
-
     public void run() {
         Runtime runtime = Runtime.getRuntime();
         Process process = null;

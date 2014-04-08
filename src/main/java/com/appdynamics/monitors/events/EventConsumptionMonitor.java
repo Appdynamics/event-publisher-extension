@@ -27,7 +27,11 @@ import org.dom4j.io.SAXReader;
 public class EventConsumptionMonitor extends AManagedMonitor {
 
     private static final Logger LOG = Logger.getLogger(EventConsumptionMonitor.class);
-    private static final int WORKER_COUNT = 10; // Max worker count can be altered via configuration.
+    private static final int WORKER_COUNT = 5; // Max worker count can be altered via configuration.
+    private static final String EVENT_PUBLISHING_URL = "http://localhost:8293/machineagent/event";
+    private static final String QUERY_STRING_TYPE = "type";
+    private static final String QUERY_STRING_SUMMARY = "summary";
+    private static final String EVENT_TYPE_INFO = "info";
 
     private Integer workerCount = WORKER_COUNT;
 
@@ -87,16 +91,26 @@ public class EventConsumptionMonitor extends AManagedMonitor {
      */
     public TaskOutput execute(final Map<String, String> args, final TaskExecutionContext context)
             throws TaskExecutionException {
-        
+
         String projectFolder = args.get("project_path");
+
+        final String strWorkerCount = args.get("worker_count");
+
+        if (strWorkerCount != null && !"".equals(strWorkerCount.trim())) {
+            try {
+                this.workerCount = Integer.parseInt(strWorkerCount);
+            } catch (NumberFormatException e) {
+                // Ignore.
+            }
+        }
 
         // Parse the scripts.xml.
         try {
-            parseXML(projectFolder+"/events.xml");
+            parseXML(projectFolder + "/events.xml");
         } catch (DocumentException e) {
             LOG.error("Failed to parse XML." + e.toString());
         }
-        
+
         final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(this.workerCount);
 
         // Add the tasks to execute them in some time in future.
@@ -126,29 +140,27 @@ public class EventConsumptionMonitor extends AManagedMonitor {
 
     private void publishEventOnStatusChange() {
         HttpClient httpClient = new HttpClient();
-        for(EventScript eventScript : eventScripts) {
-            if(eventScript.isStatusChanged()) {
-                String eventURL = "http://localhost:8293/machineagent/event";
-                String summary = eventScript.getName()+" "+eventScript.getExitStatus(eventScript.getExitCode());
-                GetMethod httpGet = new GetMethod(eventURL);
+        for (EventScript eventScript : eventScripts) {
+            if (eventScript.isStatusChanged()) {
+                String summary = eventScript.getName() + " " + eventScript.getExitStatus(eventScript.getExitCode());
+                GetMethod httpGet = new GetMethod(EVENT_PUBLISHING_URL);
                 httpGet.setQueryString(new NameValuePair[]{
-                        new NameValuePair("type", "info"),
-                        new NameValuePair("summary", summary)
+                        new NameValuePair(QUERY_STRING_TYPE, EVENT_TYPE_INFO),
+                        new NameValuePair(QUERY_STRING_SUMMARY, summary)
                 });
                 try {
                     int statusCode = httpClient.executeMethod(httpGet);
                     if (statusCode >= 200 && statusCode < 300) {
                         eventScript.setStatusChanged(false);
-                        LOG.info("Event "+eventScript.getName()+" published to controller");
+                        LOG.info("Event " + eventScript.getName() + " published to controller");
                     } else {
-                        String response = httpGet.getResponseBodyAsString(); 
+                        String response = httpGet.getResponseBodyAsString();
                         LOG.error("Unexpected response : " + response);
-                        throw new RuntimeException("Unexpected response : " + response);
                     }
                 } catch (IOException e) {
                     LOG.error("Error while posting event to controller", e);
                 } finally {
-                    if(LOG.isDebugEnabled()) {
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("Releasing the connection");
                     }
                     httpGet.releaseConnection();
@@ -164,5 +176,5 @@ public class EventConsumptionMonitor extends AManagedMonitor {
         args.put("event-xml", "/home/satish/AppDynamics/Code/extensions/event-consumption-extension/src/main/resources/config/events.xml");
         eventConsumptionMonitor.execute(args, null);
     }
-    
+
 }
