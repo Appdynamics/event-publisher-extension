@@ -12,10 +12,12 @@ This extension works only with the standalone machine agent.
 3. Unzip the downloaded file and cd into EventConsumptionMonitor
 4. Open the monitor.xml file and edit the project path to the EventConsumptionMonitor directory that was just created.
 5. Open the events.xml file and add the appropriate scripts such as those in [the events.xml example](https://github.com/Appdynamics/event-consumption-extension/blob/master/README.md#eventsxml).
-6. Restart the Machine Agent.
+6. Restart the Machine Agent by setting -Dmetric.http.listener=true.
 7. In the AppDynamics controller, look for events in \<App ID\> -> Events
 
-**Note**: The event scripts must have read access by the Machine Agent for the monitoring extension to execute them.
+**Note**: The event scripts must have read access by the Machine Agent for the monitoring extension to execute them. <br>
+**Note**: While starting the machine agent please set the property metric.http.listener to true <br>
+ ex: java -Dmetric.http.listener=true -jar machineagent.jar
 
 ##Directory Structure
 
