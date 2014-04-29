@@ -3,16 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.appdynamics.extensions</groupId>
-    <artifactId>event-consumption-extension</artifactId>
+    <artifactId>event-publisher-extension</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>event-consumption-extension</name>
+    <name>event-publisher-extension</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.7</version>
+        </dependency>
         <dependency>
             <groupId>com.appdynamics</groupId>
             <artifactId>machine-agent</artifactId>
@@ -24,11 +29,6 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -73,7 +73,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/EventConsumptionMonitor/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/EventPublisherMonitor/lib</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
@@ -89,7 +89,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Implementation-Title>EventConsumptionMonitor Monitor v${project.version} Build Date ${maven.build.timestamp}</Implementation-Title>
+                            <Implementation-Title>EventPublisherMonitor Monitor v${project.version} Build Date ${maven.build.timestamp}</Implementation-Title>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -104,7 +104,7 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <property name="target.dir" value="${build.directory}/EventConsumptionMonitor"/>
+                                <property name="target.dir" value="${build.directory}/EventPublisherMonitor"/>
                                 <mkdir dir="${target.dir}"/>
                                 <copy todir="${target.dir}">
                                     <fileset dir="src/main/resources/config" includes="monitor.xml"/>
@@ -119,7 +119,7 @@
                                     <fileset dir="${build.directory}" includes="${project.artifactId}.${project.packaging}"/>
                                 </copy>
                                 <zip destfile="${target.dir}.zip">
-                                    <zipfileset dir="${target.dir}" filemode="755" prefix="EventConsumptionMonitor/"/>
+                                    <zipfileset dir="${target.dir}" filemode="755" prefix="EventPublisherMonitor/"/>
                                 </zip>
                                 <delete dir="${target.dir}"/>
                             </target>
@@ -157,6 +157,6 @@
         </repository>
     </repositories>
     <scm>
-        <connection>scm:git:https://github.com/Appdynamics/event-consumption-extension.git</connection>
+        <connection>scm:git:https://github.com/Appdynamics/event-publisher-extension.git</connection>
     </scm>
 </project>

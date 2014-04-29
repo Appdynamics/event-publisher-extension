@@ -1,28 +1,45 @@
 package com.appdynamics.monitors.events;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
+@XStreamAlias("event")
 public class EventScript implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(EventScript.class);
     private static final String OUTPUT_NOT_DEFINED = "OUTPUT_NOT_DEFINED";
     
     private String id;
+    @XStreamAlias("name")
     private String name;
+    @XStreamAlias("summary")
     private String summary;
+    @XStreamAlias("comment")
     private String comment;
+    @XStreamAlias("outputs")
     private List<Output> outputs;
+    @XStreamAlias("path")
     private String path;
+    @XStreamAlias("arguments")
     private String arguments;
+    @XStreamAlias("period")
     private int period;
+    @XStreamAlias("max-wait-time")
     private int maxWaitTime;
     private boolean statusChanged;
-    private int exitCode = -1;
+    private int exitCode;
+    
+    private Object readResolve() {
+        id = UUID.randomUUID().toString();
+        exitCode = -1;
+        return this;
+    }
 
     public String getId() {
         return id;
@@ -100,9 +117,6 @@ public class EventScript implements Runnable {
     }
 
     public void setMaxWaitTime(int maxWaitTime) {
-        if(maxWaitTime <= 0) {
-            maxWaitTime = 5;  //If not specified, wait for 5 seconds
-        }
         this.maxWaitTime = maxWaitTime;
     }
 
@@ -166,8 +180,11 @@ public class EventScript implements Runnable {
         }
     }
 
+    @XStreamAlias("output")
     class Output {
+        @XStreamAlias("exitCode")
         private int exitCode;
+        @XStreamAlias("status")
         private String status;
 
         Output(int exitCode, String status) {
