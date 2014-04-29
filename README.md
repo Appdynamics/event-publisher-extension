@@ -1,17 +1,17 @@
-# Event Consumption Extension  
+# Event Publisher Extension  
 
 ##Use Case
 
-The Event Consumption Extension executes various scripts at user configurable intervals and based on exit code sends events to Controller.
+The Event Publisher Extension executes various scripts at user configurable intervals and based on exit code sends events to Controller.
 
 This extension works only with the standalone machine agent.
 
 ##Installation
-1. Run 'mvn clean install' from the event-consumption-extension directory
-2. Download the file EventConsumptionMonitor.zip found in the 'target' directory into \<machineagent install dir\>/monitors/
-3. Unzip the downloaded file and cd into EventConsumptionMonitor
-4. Open the monitor.xml file and edit the project path to the EventConsumptionMonitor directory that was just created.
-5. Open the events.xml file and add the appropriate scripts such as those in [the events.xml example](https://github.com/Appdynamics/event-consumption-extension/blob/master/README.md#eventsxml).
+1. Run 'mvn clean install' from the event-publisher-extension directory
+2. Download the file EventPublisherMonitor.zip found in the 'target' directory into \<machineagent install dir\>/monitors/
+3. Unzip the downloaded file and cd into EventPublisherMonitor
+4. Open the monitor.xml file and edit the project path to the EventPublisherMonitor directory that was just created.
+5. Open the events.xml file and add the appropriate scripts such as those in [the events.xml example](https://github.com/Appdynamics/event-publisher-extension/blob/master/README.md#eventsxml).
 6. Restart the Machine Agent by setting -Dmetric.http.listener=true.
 7. In the AppDynamics controller, look for events in \<App ID\> -> Events
 
@@ -28,7 +28,7 @@ This extension works only with the standalone machine agent.
 </tr>
 <tr>
 <td class='confluenceTd'> src/main/java </td>
-<td class='confluenceTd'> Contains source code to Event Consumption Extension  </td>
+<td class='confluenceTd'> Contains source code to Event Publisher Extension  </td>
 </tr>
 <tr>
 <td class='confluenceTd'> src/main/resources </td>
@@ -57,28 +57,29 @@ This extension works only with the standalone machine agent.
 
 ~~~~
 <monitor>
-        <name>EventConsumptionMonitor</name>
-        <type>managed</type>
-        <description>Event Consumption Monitor</description>
-        <monitor-configuration></monitor-configuration>
-        <monitor-run-task>
-                <execution-style>continuous</execution-style>
-                <name>Event Consumption Monitor Run Task</name>
-                <display-name>Event Consumption Monitor Task</display-name>
-                <description>Event Consumption Monitor Task</description>
-                <type>java</type>
-                <execution-timeout-in-secs>60</execution-timeout-in-secs>
-                <task-arguments>
-                    <argument name="project_path" is-required="true" default-value="/home/satish/AppDynamics/MachineAgent/monitors/EventConsumptionMonitor"/>
-                    <!-- Controls how many worker threads would be spawned to execute the scripts -->
-                    <argument name="worker_count" is-required="false" default-value="5"/>
-		       </task-arguments>
-                <java-task>
-                    <classpath>event-consumption-extension.jar;lib/dom4j-1.6.1.jar;lib/xml-apis-1.0.b2.jar</classpath>
-                        <impl-class>com.appdynamics.monitors.events.EventConsumptionMonitor</impl-class>
-                </java-task>
-        </monitor-run-task>
+    <name>EventPublisherMonitor</name>
+    <type>managed</type>
+    <description>Event Publisher Monitor</description>
+    <monitor-configuration></monitor-configuration>
+    <monitor-run-task>
+        <execution-style>periodic</execution-style>
+        <name>Event Publisher Monitor Run Task</name>
+        <display-name>Event Publisher Monitor Task</display-name>
+        <description>Event Publisher Monitor Task</description>
+        <type>java</type>
+        <execution-timeout-in-secs>60</execution-timeout-in-secs>
+        <task-arguments>
+            <argument name="project_path" is-required="true" default-value="/home/satish/AppDynamics/MachineAgent/monitors/EventPublisherMonitor"/>
+            <!-- Controls how many worker threads would be spawned to execute the scripts -->
+            <argument name="worker_count" is-required="false" default-value="5"/>
+        </task-arguments>
+        <java-task>
+            <classpath>event-publisher-extension.jar;lib/xstream-1.4.7.jar;lib/xmlpull-1.1.3.1.jar;lib/xpp3_min-1.1.4c.jar</classpath>
+            <impl-class>com.appdynamics.monitors.events.EventPublisherMonitor</impl-class>
+        </java-task>
+    </monitor-run-task>
 </monitor>
+
 ~~~~
 
 ###events.xml
@@ -88,7 +89,7 @@ This extension works only with the standalone machine agent.
 | \<name\> | Name of the event |
 | \<path\>  | Path to the shell file |
 | \<period\>  | (seconds) - Delay between consecutive  calls. |
-| \<max-wait-time\>  | (seconds) - Wait time before force killing this script. If not specified, assumes 5 seconds. |
+| \<max-wait-time\>  | (seconds) - seconds to wait before force killing this script. If not specified or is more than period then assumes the value specified in period. |
 | \<arguments\> | Arguments that will be passed to the script |
 
 
@@ -98,7 +99,7 @@ This extension works only with the standalone machine agent.
             <name>Tomcat Status</name>
             <summary>Tomcat Status</summary>
             <comment>Event for tomcat status</comment>
-            <path>/home/satish/AppDynamics/Code/extensions/event-consumption-extension/src/main/resources/config/scripts/script.sh</path>
+            <path>/home/satish/AppDynamics/Code/extensions/event-publisher-extension/src/main/resources/config/scripts/script.sh</path>
             <outputs>
                 <output>
                     <exitCode>0</exitCode>
@@ -112,7 +113,7 @@ This extension works only with the standalone machine agent.
             <arguments/>
             <!--Number of seconds to wait to execute the script periodically -->
             <period>5</period>
-            <!-- Number of seconds to wait before force killing this script. If not specified, assumes 5 seconds-->
+            <!-- Number of seconds to wait before force killing this script. If not specified or is more than period then assumes the value specified in period-->
             <max-wait-time>5</max-wait-time>
         </event>
     </events>
@@ -138,7 +139,7 @@ From the above script
 
 ##Contributing
 
-Always feel free to fork and contribute any changes directly via [GitHub](https://github.com/Appdynamics/event-consumption-extension).
+Always feel free to fork and contribute any changes directly via [GitHub](https://github.com/Appdynamics/event-publisher-extension).
 
 ##Community
 
