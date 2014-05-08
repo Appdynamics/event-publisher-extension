@@ -8,7 +8,6 @@ import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -32,6 +31,13 @@ public class EventPublisherMonitor extends AManagedMonitor {
     private Integer workerCount = WORKER_COUNT;
 
     private Collection<EventScript> eventScripts; // Collection of tasks (implementing java.lang.Runnable)
+
+    public EventPublisherMonitor() {
+        String details = EventPublisherMonitor.class.getPackage().getImplementationTitle();
+        String msg = "Using Monitor Version [" + details + "]";
+        LOG.info(msg);
+        System.out.println(msg);
+    }
 
     private void parseAndPopulate(String instrumentXMLPath) {
 
@@ -76,6 +82,9 @@ public class EventPublisherMonitor extends AManagedMonitor {
 
             //If max wait time is not defined or is more than the period specified then reset it to period specified.
             if(script.getMaxWaitTime() == 0 || script.getMaxWaitTime() > script.getPeriod()) {
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Wait time for the script "+script.getName()+" is more than period. Resetting it to the value specified in the period");
+                }
                 script.setMaxWaitTime(script.getPeriod());
             }
 
@@ -128,14 +137,4 @@ public class EventPublisherMonitor extends AManagedMonitor {
             }
         }
     }
-
-    public static void main(String[] arg) throws TaskExecutionException {
-        EventPublisherMonitor eventPublisherMonitor = new EventPublisherMonitor();
-
-        Map<String, String> args = new HashMap<String, String>();
-        String value = "/home/satish/AppDynamics/Code/extensions/event-publisher-extension/src/main/resources/config/events.xml";
-        args.put("event-xml", value);
-        eventPublisherMonitor.parseAndPopulate(value);
-    }
-
 }
