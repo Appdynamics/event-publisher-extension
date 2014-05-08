@@ -112,7 +112,7 @@ This extension works only with the standalone machine agent.
             </outputs>
             <arguments/>
             <!--Number of seconds to wait to execute the script periodically -->
-            <period>5</period>
+            <period>60</period>
             <!-- Number of seconds to wait before force killing this script. If not specified or is more than period then assumes the value specified in period-->
             <max-wait-time>5</max-wait-time>
         </event>
